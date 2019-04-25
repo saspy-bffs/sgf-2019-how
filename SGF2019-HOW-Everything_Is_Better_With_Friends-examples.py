@@ -1,0 +1,119 @@
+# load all standard library modules needed for examples
+import platform
+
+# load all third-party modules needed for examples
+from pandas import DataFrame
+from saspy import SASsession
+
+
+# define utility function to print linebreak-padded output with a title and optional line of 80 stars afterward
+def print_with_title(output, title='', linebreaks_before=2, linebreaks_after=2, put_stars_after=True):
+    print('\n' * linebreaks_before + title + '\n' * 2, output, '\n' * linebreaks_after, sep='')
+    if put_stars_after:
+        print('*' * 80)
+
+
+# only proceed if this file is executed directly
+if __name__ == '__main__':
+
+    # Example 0. Print Python version number
+    print_with_title(platform.sys.version, 'Python version being used:')
+
+    # Example 1. Print available Python modules
+    print()
+    help('modules')
+    print_with_title('', linebreaks_before=0, linebreaks_after=0)
+
+    # Example 2. Create a string variable and print its value; also print its type if its value hasn't been modified
+    hello_world_str = 'Hello, Jupyter!'
+    print_with_title(hello_world_str, 'The value of hello_world_str:')
+    if hello_world_str == 'Hello, Jupyter!':
+        print_with_title(type(hello_world_str), 'The type of hello_world_str:')
+    else:
+        print_with_title("The string doesn't have the expected value!", 'hello_world_str has been modified:')
+
+    # Example 3. Create a list variable and print its value and type
+    hello_world_list = ['Hello', 'list']
+    print_with_title(hello_world_list, 'The value of hello_world_list:')
+    print_with_title(type(hello_world_list), 'The type of hello_world_list:')
+
+    # Example 4. Create a dictionary with each key mapped to a list, and print its value and type
+    hello_world_dict = {
+            'salutation': ['Hello', 'dict'],
+            'valediction': ['Goodbye', 'list'],
+            'part of speech': ['interjection', 'noun'],
+    }
+    print_with_title(hello_world_dict, 'The value of hello_world_dict:')
+    print_with_title(type(hello_world_dict), 'The type of hello_world_dict:')
+
+    # Example 5. Create a DataFrame from a dictionary of lists, and print its value and type
+    hello_world_df = DataFrame(
+        {
+            'salutation': ['Hello', 'DataFrame'],
+            'valediction': ['Goodbye', 'dict'],
+            'part of speech': ['exclamation', 'noun'],
+        }
+    )
+    print_with_title(hello_world_df, 'The value of hello_world_df:')
+    print_with_title(type(hello_world_df), 'The type of hello_world_df:')
+
+    # Example 6. Create a SAS session object and print its type
+    sas = SASsession()
+    print_with_title(type(sas), 'The type of SAS session object sas:')
+
+    # Example 7. Compute the Python equivalent of the following SAS code after loading sashelp.fish into a DataFrame:
+    # PROC MEANS DATA=sashelp.fish;
+    # RUN;
+    fish_df = sas.sasdata2dataframe(table='fish', libref='sashelp')
+    print_with_title(fish_df, 'The value of fish_df:')
+    print_with_title(type(fish_df), 'The type of fish_df:')
+    print_with_title(fish_df.describe(), 'The Python equivalent of PROC MEANS using fish_df:')
+
+    # Example 8. Compute and print a DataFrame containing the Python equivalent of the following SAS code:
+    # PROC MEANS STD MEAN MIN MAX DATA=sashelp.fish;
+    #     CLASS Species;
+    #     VAR Weight;
+    # RUN;
+    fish_df_gsa = fish_df.groupby('Species')['Weight'].agg(['count', 'std', 'mean', 'min', 'max'])
+    print_with_title(fish_df_gsa, 'The Python equivalent of PROC MEANS with CLASS and VAR statements:')
+
+    # Example 9. Write the DataFrame back to SAS dataset Work.fish_sds_gsa, and directly run the following SAS code:
+    # ODS LISTING;
+    # PROC PRINT DATA=fish_sds_gsa;
+    # RUN;
+    sas.dataframe2sasdata(fish_df_gsa, table="fish_sds_gsa", libref="Work")
+    sas_submit_return_value = sas.submit('PROC PRINT DATA=fish_sds_gsa; RUN;', results='TEXT')
+    sas_submit_results = sas_submit_return_value['LST']
+    print_with_title(sas_submit_results, 'SAS results from PROC PRINT applies to new SAS dataset Work.fish_sds_gsa:')
+
+    # Example 10. Get SAS Session information by directly running the following code:
+    # PROC PRODUCT_STATUS;
+    # RUN;
+    sas_submit_return_value = sas.submit('PROC PRODUCT_STATUS; RUN;')
+    sas_submit_log = sas_submit_return_value['LOG']
+    print_with_title(sas_submit_log, 'SAS log from PROC PRODUCT_STATUS:')
+
+    # Example 11. Create connection to SAS dataset sashelp.fish and print its type; print the Python equivalent of
+    # PROC CONTENTS DATA=fish_sds_gsa;
+    # RUN;
+    fish_sds = sas.sasdata(table='fish', libref='sashelp')
+    print_with_title(type(fish_sds), 'The type of fish_sds:')
+    print_with_title(fish_sds.columnInfo(), 'The Python equivalent of PROC CONTENTS:')
+
+    # Example 12. Create connection to SAS dataset sashelp.fish and print its type; print the Python equivalent of
+    # PROC CONTENTS DATA=fish_sds_gsa;
+    # RUN;
+    sas.teach_me_SAS(True)
+    print_with_title('', 'The Python code generated by fish_sds.means():', linebreaks_after=0, put_stars_after=False)
+    fish_sds.means()
+    print_with_title('', '', linebreaks_before=0, linebreaks_after=0)
+    sas.teach_me_SAS(False)
+
+    # Extra Credit. Imitate the SAS Macro Facility by directly running the following SAS code:
+    # PROC MEANS DATA=sashelp.fish; RUN;
+    # PROC MEANS DATA=sashelp.iris; RUN;
+    sas_code_fragment = 'PROC MEANS DATA=sashelp.%s; RUN;'
+    for dsn in ['fish', 'iris']:
+        sas_submit_return_value = sas.submit(sas_code_fragment % dsn, results='TEXT')
+        sas_submit_results = sas_submit_return_value['LST']
+        print_with_title(sas_submit_results, 'SAS results from PROC MEANS applies to sashelp.%s:' % dsn)
