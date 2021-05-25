@@ -2,7 +2,7 @@
 
 # Everything is better with friends: Executing SAS code in Python scripts with SASPy
 
-### Materials from a Hands-on Workshop at [SAS Global Forum](https://www.sas.com/en_us/events/sas-global-forum.html) in Dallas, Texas, on April 29, 2019.
+### Materials from a Hands-on Workshop at [SAS Global Forum](https://github.com/sascommunities/sas-global-forum-2019) in Dallas, Texas, on April 29, 2019.
 
 Materials provided:
 
