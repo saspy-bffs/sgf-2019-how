@@ -6,11 +6,11 @@
 
 Materials provided:
 
-- Workshop [paper](SGF2019-HOW-Everything_Is_Better_With_Friends-paper.pdf) and [slides](SGF2019-HOW-Everything_Is_Better_With_Friends-slides.pdf)
+- Workshop [paper](Paper-SGF2019-HOW-Everything_Is_Better_With_Friends.pdf) and [slides](Slides-SGF2019-HOW-Everything_Is_Better_With_Friends.pdf)
 
-- All Workshop examples in both [Jupyter Notebook](SGF2019-HOW-Everything_Is_Better_With_Friends-examples.ipynb) and [Python script](SGF2019-HOW-Everything_Is_Better_With_Friends-examples.py) format
+- All Workshop examples in both [Jupyter Notebook](examples/Examples-SGF2019-HOW-Everything_Is_Better_With_Friends.ipynb) and [Python script](examples/Examples-SGF2019-HOW-Everything_Is_Better_With_Friends.py) format
 
-- [Instructions](SGF2019-HOW-Everything_Is_Better_With_Friends-handout.pdf) for replicating Workshop examples/demos
+- [Instructions](Handout-SGF2019-HOW-Everything_Is_Better_With_Friends.pdf) for replicating Workshop examples/demos
 
 All development was done under Windows 10 with Python 3.7 and SAS 9.4 locally installed. Any deviation from this setup might require modifications to example code.
 
